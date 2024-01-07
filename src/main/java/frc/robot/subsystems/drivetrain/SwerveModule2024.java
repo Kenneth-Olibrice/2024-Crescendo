@@ -14,9 +14,12 @@ public class SwerveModule2024 extends BaseSwerveModule{
     private TalonFX m_velocity;
     private TalonFX m_angle;
     
-    public SwerveModule2024(String name, Translation2d translation, Rotation2d xModeAngle) {
+    public SwerveModule2024(String name, Translation2d translation, Rotation2d xModeAngle, int absoluteEncoderID, int velocityID, int angleID) {
         super(name, translation, xModeAngle);
-        //TODO Auto-generated constructor stub
+
+        m_absoluteEncoder = new CANcoder(absoluteEncoderID);
+        m_velocity = new TalonFX(velocityID);
+        m_angle = new TalonFX(angleID);
     }
 
     @Override
@@ -51,8 +54,7 @@ public class SwerveModule2024 extends BaseSwerveModule{
 
     @Override
     protected Rotation2d getAbsoluteAngle() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAbsoluteAngle'");
+        return Rotation2d.fromDegrees(m_absoluteEncoder.getAbsolutePosition().getValue()); // TO-DO: calculate absolute encoder ticks to degrees and call Rotation2d.fromDegrees() here
     }
 
     @Override
