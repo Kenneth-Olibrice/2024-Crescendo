@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import frc.robot.Constants.SwerveConstants;
 
 public class SwerveModule2024 extends BaseSwerveModule{
     private CANcoder m_absoluteEncoder;
@@ -65,8 +66,9 @@ public class SwerveModule2024 extends BaseSwerveModule{
 
     @Override
     protected double getEncoderDistance_m() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEncoderDistance_m'");
+        double totalRotations = m_velocity.getPosition().getValue() / (SwerveConstants.TalonCountsPerRevolution * SwerveConstants.SwerveModuleVelocityGearRatio);
+        double totalDistanceMeters = totalRotations * (SwerveConstants.DriveWheelCircumferenceMeters);
+        return totalDistanceMeters;
     }
 
     @Override
