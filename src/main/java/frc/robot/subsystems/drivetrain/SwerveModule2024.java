@@ -73,8 +73,9 @@ public class SwerveModule2024 extends BaseSwerveModule{
 
     @Override
     protected double getEncoderVelocity_mps() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getEncoderVelocity_mps'");
+        double ticksPerMeter = SwerveConstants.TalonCountsPerRevolution / SwerveConstants.DriveWheelCircumferenceMeters;
+        double metersPerSecond = m_velocity.getVelocity().getValue() / ticksPerMeter;
+        return metersPerSecond;
     }
 
     @Override
@@ -112,5 +113,5 @@ public class SwerveModule2024 extends BaseSwerveModule{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateDashboard'");
     }
-    
+
 }
