@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.SwerveConstants;
 
@@ -14,13 +15,16 @@ public class SwerveModule2024 extends BaseSwerveModule{
     private CANcoder m_absoluteEncoder;
     private TalonFX m_velocity;
     private TalonFX m_angle;
+    private SwerveModuleState m_targetState;
     
-    public SwerveModule2024(String name, Translation2d translation, Rotation2d xModeAngle, int absoluteEncoderID, int velocityID, int angleID) {
+    public SwerveModule2024(String name, Translation2d translation, Rotation2d xModeAngle, int absoluteEncoderID, int velocityID, int angleID, boolean isInverted) {
         super(name, translation, xModeAngle);
 
         m_absoluteEncoder = new CANcoder(absoluteEncoderID);
         m_velocity = new TalonFX(velocityID);
         m_angle = new TalonFX(angleID);
+
+        m_velocity.setInverted(isInverted);
     }
 
     @Override
@@ -85,15 +89,13 @@ public class SwerveModule2024 extends BaseSwerveModule{
     }
 
     @Override
-    protected void setTargetAngle(Rotation2d arg0) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTargetAngle'");
+    protected void setTargetAngle(Rotation2d targetRotation) {
+        m_targetState.angle = targetRotation;
     }
 
     @Override
-    protected void setTargetVelocity_mps(double arg0) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTargetVelocity_mps'");
+    protected void setTargetVelocity_mps(double targetVelocityMps) {
+        m_targetState.speedMetersPerSecond = targetVelocityMps;
     }
 
     @Override
