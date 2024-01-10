@@ -2,8 +2,11 @@ package frc.robot.subsystems.drivetrain;
 
 import com.chaos131.pid.PIDFValue;
 import com.chaos131.swerve.BaseSwerveModule;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ControlModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -23,6 +26,9 @@ public class SwerveModule2024 extends BaseSwerveModule{
         m_absoluteEncoder = new CANcoder(absoluteEncoderID);
         m_velocity = new TalonFX(velocityID);
         m_angle = new TalonFX(angleID);
+
+        m_velocity.getConfigurator().apply(new TalonFXConfiguration());
+        m_angle.getConfigurator().apply(new TalonFXConfiguration());
 
         m_velocity.setInverted(isInverted);
     }
@@ -57,9 +63,12 @@ public class SwerveModule2024 extends BaseSwerveModule{
         throw new UnsupportedOperationException("Unimplemented method 'driverModeInit'");
     }
 
+    
     @Override
     protected Rotation2d getAbsoluteAngle() {
-        return Rotation2d.fromDegrees(m_absoluteEncoder.getAbsolutePosition().getValue()); // TO-DO: calculate absolute encoder ticks to degrees and call Rotation2d.fromDegrees() here
+        // TO-DO: check if this functions actually returns rotations
+        double rotations = m_absoluteEncoder.getAbsolutePosition().getValue();
+        return Rotation2d.fromRotations(rotations);
     }
 
     @Override
@@ -89,8 +98,10 @@ public class SwerveModule2024 extends BaseSwerveModule{
     }
 
     @Override
-    protected void setTargetAngle(Rotation2d targetRotation) {
-        m_targetState.angle = targetRotation;
+    protected void setTargetAngle(Rotation2d targetAngle) {
+        VelocityVoltage voltageOut = new VelocityVoltage(0);
+        
+        m_angle.set(targetAngle.getRadians());
     }
 
     @Override
